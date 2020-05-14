@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <style type="text/css">
+    #chart {
+      background-color: rgb(171, 171, 216);
+      position: relative;
+      height: 200px;
+      width: 200px;
+      border: 1px black solid;
+      display: table-cell;
+      vertical-align: bottom;
+      font-size: 10px
+
+    }
+
+    .bar {
+      position: absolute;
+      bottom: 0;
+      display: inline-block;
+      width: 10px;
+      margin: 2px;
+      background-color: rgb(221, 102, 158);
+      text-align: left
+    }
+  </style>
+
+  <div id="chart"></div>
+
+  <script src="jquery.js"></script>
+  <script type="text/javascript">
+
+
+
+    var i, max, min, h, html = '', data = [34.7, 68.9, 65.1, 130.2, 208.6, 172.8, 155.0, 168.6, 134.4, 52.7, 94.5, 41.5];
+
+    max = min = data[0];
+    //establishing the max and min of all the bars
+
+    for (i = 0; i < data.length; i++) {
+      if (max < data[i]) max = data[i];
+      if (min > data[i]) min = data[i];
+    }
+
+
+
+
+    let height_full = $("#chart").css("height");
+    let height = height_full.slice(0, height_full.length - 2);
+    let width_full = $("#chart").css("width");
+    let width = width_full.slice(0, width_full.length - 2);
+    let dist_bar = (width / data.length);
+    let width_bar = 0.7 * (width / data.length);
+    let startVal = 0.1 * height;
+    let endVal = 0.9 * height;
+
+    for (i = 0; i < data.length; i++) {
+
+      if (data[i] === min) {
+        h = startVal;
+        html += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + (dist_bar * i) + 'px">' + data[i] + '</div>';
+      } else if (data[i] === max) {
+        h = endVal;
+        html += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + (dist_bar * i) + 'px">' + data[i] + '</div>';
+      } else {
+        h = startVal + (data[i] - min) * ((endVal - startVal) / (max - min));
+        html += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + (dist_bar * i) + 'px">' + data[i] + '</div>';
+      }
+
+
+    }
+
+    document.getElementById('chart').innerHTML = html;
+    updateStyleSheet();
+
+
+    function updateStyleSheet() {
+      $("#chart").css({
+        "background-color": "green",
+        "height": "200px",
+        "width": "200px",
+        "font-size": "10px",
+        "color": "blue"
+      });
+
+      $(".bar").css({
+        "text-align": "center",
+        "background-color": "red"
+      });
+    };
+  </script>
+</body>
+
+</html>
