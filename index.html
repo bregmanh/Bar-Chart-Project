@@ -9,35 +9,75 @@
   <style type="text/css">
     #chart {
       background-color: rgb(171, 171, 216);
-      position: relative;
+      padding-left: 15px;
+      padding-bottom: 15px;
+      position: absolute;
       height: 200px;
       width: 200px;
       border: 1px black solid;
       display: table-cell;
-      vertical-align: bottom;
+      vertical-align: top;
       font-size: 10px
-
     }
 
     .bar {
       position: absolute;
       bottom: 0;
-      display: inline-block;
+      display: float;
       width: 10px;
       margin: 2px;
       background-color: rgb(221, 102, 158);
-      text-align: left
+      text-align: left'
+    }
+
+    #chartTitle {
+      text-align: center;
+      margin-top: 0px;
+    }
+
+    #xAxisTitle {
+      position: absolute;
+    }
+
+    #axis {
+      position: absolute;
+      color: black;
+      display: inline-block;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .yaxis {
+      margin-top: 20px;
+      margin-left: 15px;
+      position: absolute;
+      width: 47px;
+      height: 280px;
+      border-left: 1px solid black;
+    }
+
+    .xaxis {
+      margin-top: 300px;
+      margin-left: 15px;
+      width: 300px;
+      height: 47px;
+      border-top: 1px solid black;
+      position: absolute;
     }
   </style>
 
-  <div id="chart"></div>
+  <div id="chart">
+    <h3 id="chartTitle">Default Title</h3>
+  </div>
+  <div id="axis">
+
+  </div>
+  <div id="xAxisTitle">Default Title</div>
 
   <script src="jquery.js"></script>
   <script type="text/javascript">
 
-
-
-    var i, max, min, h, html = '', data = [34.7, 68.9, 65.1, 130.2, 208.6, 172.8, 155.0, 168.6, 134.4, 52.7, 94.5, 41.5];
+    var i, max, min, h, html_bar = '', html_axis = '', data = [200, 68.9, 65.1, 130.2, 208.6, 172.8, 155.0, 168.6, 134.4, 52.7, 94.5, 41.5];
 
     max = min = data[0];
     //establishing the max and min of all the bars
@@ -46,52 +86,107 @@
       if (max < data[i]) max = data[i];
       if (min > data[i]) min = data[i];
     }
-
-
-
-
+    updateStyleSheet();
+    let buffer = 15;
     let height_full = $("#chart").css("height");
     let height = height_full.slice(0, height_full.length - 2);
     let width_full = $("#chart").css("width");
     let width = width_full.slice(0, width_full.length - 2);
-    let dist_bar = (width / data.length);
+    let dist_bar = ((height - buffer) / data.length);
     let width_bar = 0.7 * (width / data.length);
-    let startVal = 0.1 * height;
-    let endVal = 0.9 * height;
+    let startVal = 0.05 * width;
+    let endVal = 0.95 * width;
+    let binNum = 1;
 
     for (i = 0; i < data.length; i++) {
 
       if (data[i] === min) {
-        h = startVal;
-        html += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + (dist_bar * i) + 'px">' + data[i] + '</div>';
+        h = data[i] / max * endVal;
+        if (i === 0) {
+          html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + buffer + 'px">' + data[i] + '</div>';
+          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 2 + 'px; ">' + binNum + '</div>';
+          binNum++;
+
+        } else {
+          html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + ((dist_bar * i) + buffer) + 'px">' + data[i] + '</div>';
+          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 3 + 'px; ">' + binNum + '</div>';
+          binNum++;
+        }
+
       } else if (data[i] === max) {
         h = endVal;
-        html += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + (dist_bar * i) + 'px">' + data[i] + '</div>';
+        if (i === 0) {
+          html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + buffer + 'px">' + data[i] + '</div>';
+          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
+          binNum++;
+
+        } else {
+          html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + ((dist_bar * i) + buffer) + 'px">' + data[i] + '</div>';
+          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
+          binNum++;
+        }
       } else {
-        h = startVal + (data[i] - min) * ((endVal - startVal) / (max - min));
-        html += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + (dist_bar * i) + 'px">' + data[i] + '</div>';
+        h = (data[i] / max * endVal);
+
+        if (i === 0) {
+          html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + buffer + 'px">' + data[i] + '</div>';
+          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
+          binNum++;
+        } else {
+          html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + ((dist_bar * i) + buffer) + 'px">' + data[i] + '</div>';
+          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
+          binNum++;
+        }
       }
-
-
     }
+    $("#xAxisTitle").css({
+      "padding-top": (height ) + "px",
+      "left": ((width-50) / 2) + "px",
+    });
 
-    document.getElementById('chart').innerHTML = html;
+    let val = Math.floor(endVal / 10);
+    html_axis += '<div class="yaxis" style="height: ' + (height - 20) + 'px;"></div>'
+    html_axis += '<div class="xaxis" style="margin-top: ' + (height) + 'px;width: ' + (width - 20) + 'px;"></div>'
+
+    document.getElementById('chart').innerHTML += html_bar;
+    document.getElementById('axis').innerHTML += html_axis;
+
     updateStyleSheet();
 
+    //options to be inserted by user:
 
     function updateStyleSheet() {
       $("#chart").css({
-        "background-color": "green",
-        "height": "200px",
-        "width": "200px",
+        "background-color": "#DCDCDC",
+        "height": "400px",
+        "width": "400px",
         "font-size": "10px",
-        "color": "blue"
+        "color": "white",
+        "font-family": "Helvetica"
       });
 
       $(".bar").css({
-        "text-align": "center",
-        "background-color": "red"
+        "text-align": "right",
+        "background-color": "#191970",
+        "height": "10px"
       });
+
+      $("#chartTitle").text("Insert Bar Chart Title");
+      $("#chartTitle").css({
+        "font-size": "125%",
+        "color": "black",
+        "text-align": "center",
+        "font-family": "Helvetica"
+
+      });
+      $("#xAxisTitle").text("Insert X Axis Title");
+      $("#xAxisTitle").css({
+        "font-size": "70%",
+        "color": "black",
+        "font-family": "Helvetica"
+
+      });
+
     };
   </script>
 </body>
