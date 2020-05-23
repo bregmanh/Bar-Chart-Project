@@ -17,7 +17,9 @@
       border: 1px black solid;
       display: table-cell;
       vertical-align: top;
-      font-size: 10px
+      font-size: 10px;
+
+
     }
 
     .bar {
@@ -27,7 +29,8 @@
       width: 10px;
       margin: 2px;
       background-color: rgb(221, 102, 158);
-      text-align: left'
+      text-align: left;
+      margin-top: 0px;
     }
 
     #chartTitle {
@@ -36,6 +39,9 @@
     }
 
     #xAxisTitle {
+      position: absolute;
+    }
+    #yAxisTitle {
       position: absolute;
     }
 
@@ -73,11 +79,13 @@
 
   </div>
   <div id="xAxisTitle">Default Title</div>
+  <div id="yAxisTitle">Default Title</div>
 
   <script src="jquery.js"></script>
   <script type="text/javascript">
 
-    var i, max, min, h, html_bar = '', html_axis = '', data = [200, 68.9, 65.1, 130.2, 208.6, 172.8, 155.0, 168.6, 134.4, 52.7, 94.5, 41.5];
+    let i, max, min, h, html_bar = '', html_axis = '';
+    let data = [15,2,33,80,95,23,18];
 
     max = min = data[0];
     //establishing the max and min of all the bars
@@ -87,7 +95,7 @@
       if (min > data[i]) min = data[i];
     }
     updateStyleSheet();
-    let buffer = 15;
+    let buffer = 35;
     let height_full = $("#chart").css("height");
     let height = height_full.slice(0, height_full.length - 2);
     let width_full = $("#chart").css("width");
@@ -96,7 +104,14 @@
     let width_bar = 0.7 * (width / data.length);
     let startVal = 0.05 * width;
     let endVal = 0.95 * width;
-    let binNum = 1;
+
+//creating the bins array for the y axis
+    let binNum = [];
+    for (let i=0; i<data.length; i++){
+binNum[i]=i+1;
+    }
+
+
 
     for (i = 0; i < data.length; i++) {
 
@@ -104,38 +119,38 @@
         h = data[i] / max * endVal;
         if (i === 0) {
           html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + buffer + 'px">' + data[i] + '</div>';
-          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 2 + 'px; ">' + binNum + '</div>';
-          binNum++;
+          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 2 + 'px; ">' + binNum[i] + '</div>';
+
 
         } else {
           html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + ((dist_bar * i) + buffer) + 'px">' + data[i] + '</div>';
-          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 3 + 'px; ">' + binNum + '</div>';
-          binNum++;
+          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 3 + 'px; ">' + binNum[i] + '</div>';
+
         }
 
       } else if (data[i] === max) {
         h = endVal;
         if (i === 0) {
           html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + buffer + 'px">' + data[i] + '</div>';
-          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
-          binNum++;
+          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum[i] + '</div>';
+
 
         } else {
           html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + ((dist_bar * i) + buffer) + 'px">' + data[i] + '</div>';
-          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
-          binNum++;
+          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum[i] + '</div>';
+
         }
       } else {
         h = (data[i] / max * endVal);
 
         if (i === 0) {
           html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + buffer + 'px">' + data[i] + '</div>';
-          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
-          binNum++;
+          html_axis += '<div  id= "axis" style="top:' + (buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum[i] + '</div>';
+
         } else {
           html_bar += '<div class="bar" style="height:' + width_bar + 'px; width: ' + h + 'px; top:' + ((dist_bar * i) + buffer) + 'px">' + data[i] + '</div>';
-          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum + '</div>';
-          binNum++;
+          html_axis += '<div  id= "axis" style="top:' + ((dist_bar * i) + buffer) + 'px;  padding-left: ' + 5 + 'px; ">' + binNum[i] + '</div>';
+
         }
       }
     }
@@ -143,8 +158,12 @@
       "padding-top": (height ) + "px",
       "left": ((width-50) / 2) + "px",
     });
+    $("#yAxisTitle").css({
+      "padding-top": (10) + "px",
+      "left": (10) + "px",
+    });
 
-    let val = Math.floor(endVal / 10);
+
     html_axis += '<div class="yaxis" style="height: ' + (height - 20) + 'px;"></div>'
     html_axis += '<div class="xaxis" style="margin-top: ' + (height) + 'px;width: ' + (width - 20) + 'px;"></div>'
 
@@ -156,21 +175,23 @@
     //options to be inserted by user:
 
     function updateStyleSheet() {
+      //change the following to modify overall chart and text that appears on the bars
       $("#chart").css({
-        "background-color": "#DCDCDC",
-        "height": "400px",
-        "width": "400px",
+        "background-color": "#FAEBD7",
+        "height": "200px",
+        "width": "300px",
         "font-size": "10px",
-        "color": "white",
+        "color": "black",
         "font-family": "Helvetica"
-      });
 
+      });
+      //change the following to modify bars
       $(".bar").css({
-        "text-align": "right",
-        "background-color": "#191970",
-        "height": "10px"
+        "text-align": "center",
+        "background-color": "#5F9EA0",
+        "height": "15px"
       });
-
+      //change the following to modify title of the chart
       $("#chartTitle").text("Insert Bar Chart Title");
       $("#chartTitle").css({
         "font-size": "125%",
@@ -179,13 +200,23 @@
         "font-family": "Helvetica"
 
       });
+      //change the following to modify X-Axis
       $("#xAxisTitle").text("Insert X Axis Title");
       $("#xAxisTitle").css({
         "font-size": "70%",
         "color": "black",
         "font-family": "Helvetica"
-
       });
+
+      $("#yAxisTitle").text("Insert Y Axis Title");
+      $("#yAxisTitle").css({
+        "font-size": "70%",
+        "color": "black",
+        "font-family": "Helvetica"
+      });
+      //insert an array with titles of the bins/categories for y axis
+
+
 
     };
   </script>
